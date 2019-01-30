@@ -1,0 +1,23 @@
+{
+  "name": "magix",
+  "version": "0.0.1",
+  "description": "my own website",
+  "scripts": {
+    "dev": "vuepress dev",
+    "build": "vuepress build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://118.24.15.224:8090/git/magix/magix.git"
+  },
+  "keywords": [
+    "blog",
+    "website"
+  ],
+  "author": "magix",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.0.0-alpha.30"
+  }
+}
