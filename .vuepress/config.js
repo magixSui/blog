@@ -15,7 +15,17 @@ module.exports = {
           ['../javascript/', 'javascript 简述'],
           ['../javascript/understand-script.md', '搞清 <script>'],
           ['../javascript/syntax.md', 'javascript 语法'],
+          ['../javascript/es6.md', 'es6 语法'],
+          ['../javascript/analysis.md', '内存泄漏与性能分析'],
           ['../javascript/defineProperty.md', '快速弄懂 defineProperty'],
+        ]
+      },
+      {
+        title: 'nodejs',
+        collapsable: true,
+        children: [
+          ['../nodejs/', '简述'],
+          ['../nodejs/schema-design.md', 'schema 设计'],
         ]
       },
       {
