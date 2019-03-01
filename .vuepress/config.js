@@ -18,6 +18,8 @@ module.exports = {
           ['../javascript/es6.md', 'es6 语法'],
           ['../javascript/analysis.md', '内存泄漏与性能分析'],
           ['../javascript/defineProperty.md', '快速弄懂 defineProperty'],
+          ['../javascript/promise.md', '实现一个promise'],
+          ['../javascript/es6-promise.md', 'es6-promise'],
         ]
       },
       {
