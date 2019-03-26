@@ -1,10 +1,93 @@
 # 基于 promise A+ 实现一个 promise
-在阅读规范时，可能没有办法一下弄懂所有的约定，以下是我基于实现为目的而逐步理解的过程。
-## promise A+
 [promise A+](https://promisesaplus.com/)
 [中文](https://malcolmyu.github.io/2015/06/12/Promises-A-Plus/#note-4)
-## 开始
+## 开始之前
 在实现 Promise 之前，首先要熟悉 Promise Api,如果还没有使用过 Promise,那么请先尝试使用它。
+Promise 是 ES2015 一个标准的 javascript 内置对象。主要为了解决丑陋的回调地狱：
+```javascript
+// 传统回调地狱
+  axios.get(path,function(res1) {
+  //...
+    axios.get(path,function(res2) {
+    //...
+      axios.get(path,function(res3) {
+      //...
+      })
+    })
+  })
+
+// 链式调用
+  axios.get(path).then(res1=>{
+    //...
+  }).then(res2=>{
+    //...
+  }).then(res3=>{
+    //...
+  })
+```
+### properties
+- prototype
+
+### Methods
+- Promise.all()
+- Promise.race()
+- Promise.reject()
+- Promise.resolve()
+- Promise.prototype.catch()
+- Promise.prototype.finally()
+- Promise.prototype.then()
+- Promise.prototype.constructor()
+
+### Syntex
+初始化一个 Promise 对象
+```javascript
+new Promise(executor)
+// 将一个异步函数延迟执行
+var promise1 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve({name:magix});
+  }, 300);
+});
+```
+顺序执行
+```javascript
+  let promise1 = new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            resolve({
+              name:'magix'
+            })
+          },1000)
+      })
+      let promise2 = new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            resolve({
+              name:'ella'
+            })
+          },1000)
+      })
+      let promise3 = new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            resolve({
+              name:'matin'
+            })
+          },1000)
+      })
+      promise1.then(res=>{
+        console.log(res)
+        return promise2
+      }).then(res=>{
+        console.log(res)
+        return promise3
+      }).then(res=>{
+        console.log(res)
+      })
+```
+同步执行
+```javascript
+Promise.all([promise1,promise2,promise3]).then(res=>{})
+.catch(err=>{})
+```
+## 正式开始
 考虑一个基础的场景。有一个后台请求getName，我们需要在请求之后获取名字的值，如果使用 Promise 
 来实现这个功能我通常会：
 ```javascript
@@ -31,12 +114,10 @@ function MyPromise() {
 }
 ```
 当然，现在会得到一个错误： `Uncaught TypeError: getName(...).then is not a function`，因为到目前
-还没有创建 then 函数，让我来创建它。
+还没有创建 then 函数，创建它。
 ```javascript
-MyPromise.prototype = {
-  then() {
-    
-  }
+MyPromise.prototype.then = function() {
+  
 }
 ```
 现在不会报错了，但是并不会得到我想要的输出，因为实例化的Promise传入了一个参数。
