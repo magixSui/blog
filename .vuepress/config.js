@@ -28,7 +28,7 @@ module.exports = {
         children: [
           ['../nodejs/', '简述'],
           ['../nodejs/schema-design.md', 'schema 设计'],
-          ['../nodejs/ design.md', ' 解决方案 '],
+          ['../nodejs/design.md', ' 解决方案 '],
         ]
       },
       {

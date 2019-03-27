@@ -120,17 +120,71 @@ MyPromise.prototype.then = function() {
   
 }
 ```
-现在不会报错了，但是并不会得到我想要的输出，因为实例化的Promise传入了一个参数。
+现在不会报错了，但是并不会得到想要的输出，因为实例化的Promise传入了一个参数。
 ```javascript
 // 执行传入的参数
 function MyPromise(excutor) {
   excutor()
 }
 ```
-因为 excutor 函数作为参数传递时，含有两个参数，分别是 resolve 和 reject，这两个参数分别又是两个函数，
-因此需要继续定义它们。
-## state
-现在已经可以实例化 Promise 执行 then 等方法了，但是存在一个严重的问题，then 函数会在 resolve 之前执行。
+excutor 函数作为参数传递时，含有两个参数，分别是 resolve 和 reject，这两个参数分别又是两个函数。
+```javascript
+// 传入两个匿名函数作为 handle 
+excutor(function(value) {},function(reson) {})
+```
+
+## 状态和返回值
+根据 Promise 规范，开发的 Promise 需要包括三个状态：
+- PENDING
+- FULFILLED
+- REJECTED
+其中 FULFILLED 拥有一个不可变的终值，REJECTED 拥有一个不可变的拒因。
+```javascript
+// 执行传入的参数
+var PENDING = void 0
+var FULFILLED = void 1
+var REJECTED = void 2
+
+function MyPromise(excutor) {
+  this._state = this._result = void 0
+  excutor(function(value) {},function(reson) {})
+}
+```
+## 如何执行
+现在已经可以实例化  Promise 执行 then 方法了，但是还没有执行异步的函数，现在需要将这个传递过来的函数执行,
+以 fulfill 为例。
+```javascript
+excutor(function(value) {
+    resolve(this,value)
+  },function(reson) {})
+  
+MyPromise.prototype.then = function(onfulfilled,onrejected) {
+  onfulfilled(this._result)
+}
+
+function resolve(promise,value) {
+  promise._result = value
+}  
+```
+
+## 问题
+现在的问题是，可以获取到 value ，但是初始化方法执行在 then 之前。但是因为异步的关系，初始化传递进来的函数延迟执行，
+导致 then 方法的参数没有取到。
+```javascript
+// 创建一个初始化函数 
+initialize(this,excutor)
+
+function initialize(promise,excutor) {
+  excutor(function(value) {
+    resolve(this,value)
+  },function(reson) {})
+}
+function resolve(promise,value) {
+  setTimeout(()=>{
+    promise._result = value
+  },0)
+}  
+```
 
 **一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。**
 
@@ -153,12 +207,46 @@ function MyPromise(excutor) {
   }
 ```
 
-**一个 promise 必须提供一个 then 方法以访问其当前值、终值和据因。**
 ```javascript
-  then(onFulfilled,onRejected) {
-    
+'use strict'
+
+var PENDING = void 0
+var FULFILLED = 1
+var REJECTED = 2
+// 构造函数
+function MyPromise(excutor) {
+  // 初始化状态和返回值
+  this._state = this.result = void 0
+  // 初始化订阅者
+  this.subscribers = []
+}
+
+MyPromise.prototype.then = function(onFulfilled,onRejected) {
+  var _state = this._state
+  var child = new this.constructor()
+  // 如果状态是 fulfilled 或 rejected
+  if(_state) {
+    asap()
+  }else {// 如果状态是 pending
+    subscribe()
   }
-function onFulfilled(value) {}
-function onRejected(value) {}
+  // 返回一个promise 保证链式调用
+  return child
+}
+
+// 订阅
+function subscribe() {
+  
+}
+
+// 发布
+function publish() {
+  
+}
+
+// 尽快执行
+function asap() {
+  
+}
+
 ```
-为了让 onFulfilled onRejected 延迟执行，增加一个队列。
