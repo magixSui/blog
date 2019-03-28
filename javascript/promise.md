@@ -142,8 +142,8 @@ excutor(function(value) {},function(reson) {})
 ```javascript
 // 执行传入的参数
 var PENDING = void 0
-var FULFILLED = void 1
-var REJECTED = void 2
+var FULFILLED = 1
+var REJECTED = 2
 
 function MyPromise(excutor) {
   this._state = this._result = void 0
@@ -151,62 +151,64 @@ function MyPromise(excutor) {
 }
 ```
 ## 如何执行
-现在已经可以实例化  Promise 执行 then 方法了，但是还没有执行异步的函数，现在需要将这个传递过来的函数执行,
-以 fulfill 为例。
+现在已经可以实例化  Promise 执行 then 方法了,但是有一个问题，也是 Promise 中最关键的点之一。因为 Promise 包括三个状态
+，传进来的异步函数可能处在每一个状态。这个异步函数应该在结束后立即执行，但是在 Promise 内并不知道他何时结束。
 ```javascript
-excutor(function(value) {
+// 使用 同步方法模拟 PENDING 状态
+// 调整 this 指向
+excutor((value) => {
     resolve(this,value)
-  },function(reson) {})
-  
+  },(reson) => {})
+
+// 直接执行
 MyPromise.prototype.then = function(onfulfilled,onrejected) {
   onfulfilled(this._result)
-}
-
-function resolve(promise,value) {
-  promise._result = value
 }  
 ```
 
 ## 问题
-现在的问题是，可以获取到 value ，但是初始化方法执行在 then 之前。但是因为异步的关系，初始化传递进来的函数延迟执行，
-导致 then 方法的参数没有取到。
-```javascript
-// 创建一个初始化函数 
-initialize(this,excutor)
+但是如果状态是 PENDING ，then 方法执行的时候，onfulfilled 并没有参数，因为 resolve 还没有开始执行。这里涉及到 javascript
+线程的问题。
 
-function initialize(promise,excutor) {
-  excutor(function(value) {
-    resolve(this,value)
-  },function(reson) {})
+:::tip
+在单线程中，事件是以队列的方式执行的。如果两个事件同时发生，那么总会有事件没有按照预想执行。在 javascript 事件中，存在三种执行
+方式，顺序执行，微任务，宏任务。
+
+```javascript
+// 思考一下执行顺序
+setTimeout(()=>{
+  console.log(1)
+},0)
+fun()
+console.log(2)
+var promise1 = Promise.resolve('resolve')
+console.log(3)
+function fun() {
+  console.log(4)
 }
-function resolve(promise,value) {
-  setTimeout(()=>{
-    promise._result = value
-  },0)
-}  
 ```
+:::
 
-**一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。**
-
-依据状态信息，可以在 then 方法中根据当前状态值，判断是否执行回调。
+继续回到 Promise ，**一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。**
+根据不同的状态可以设置 resolve 的执行方式。
 ```javascript
-var PENDGIN = '0'
-var FULFILLED = '1'
-var REJECTED = '2'
-function MyPromise(excutor) {
-  this.state = PENDGIN
-}
-  then() {
-    if(this.state === PENDGIN) {
-      
-    }if(this.state === FULFILLED) {
-      
-    }if(this.state === REJECTED) {
-      
+  MyPromise.prototype.then = function(onfulfilled,onrejected) {
+  var _state = this._state
+    if(_state) {
+      onfulfilled(this._result)
+    }else {
+      subscribe()
     }
   }
+  
+  function subscribe() {
+    
+  }
 ```
-
+:::tip
+这里是另一个关键点，在状态为 PENDING 的时候， 建立一个队列，将想要执行的 onfulfilled 加入到队列中，然后当 resolve 方法执行后，通知队列中的
+方法。
+:::
 ```javascript
 'use strict'
 
