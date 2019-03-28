@@ -132,44 +132,30 @@ excutor 函数作为参数传递时，含有两个参数，分别是 resolve 和
 // 传入两个匿名函数作为 handle 
 excutor(function(value) {},function(reson) {})
 ```
+## 执行
+现在可以初始化构造函数执行 then 方法了，但是还没有将 callback 传递进来。现在的思路是，通过执行 resolve 方法，
+将当前对象 promise得内部属性 _result 赋值为 value,然后执行 then 中的 callback。
 
-## 状态和返回值
-根据 Promise 规范，开发的 Promise 需要包括三个状态：
-- PENDING
-- FULFILLED
-- REJECTED
-其中 FULFILLED 拥有一个不可变的终值，REJECTED 拥有一个不可变的拒因。
 ```javascript
 // 执行传入的参数
-var PENDING = void 0
-var FULFILLED = 1
-var REJECTED = 2
-
 function MyPromise(excutor) {
-  this._state = this._result = void 0
-  excutor(function(value) {},function(reson) {})
-}
-```
-## 如何执行
-现在已经可以实例化  Promise 执行 then 方法了,但是有一个问题，也是 Promise 中最关键的点之一。因为 Promise 包括三个状态
-，传进来的异步函数可能处在每一个状态。这个异步函数应该在结束后立即执行，但是在 Promise 内并不知道他何时结束。
-```javascript
-// 使用 同步方法模拟 PENDING 状态
-// 调整 this 指向
-excutor((value) => {
-    resolve(this,value)
+	this._result = void 0
+  excutor((value) => {
+  	resolve(this,value)
   },(reson) => {})
+}
 
-// 直接执行
 MyPromise.prototype.then = function(onfulfilled,onrejected) {
   onfulfilled(this._result)
-}  
+}
+
+function resolve(promise,value) {
+	promise._result = value
+}
 ```
-
-## 问题
-但是如果状态是 PENDING ，then 方法执行的时候，onfulfilled 并没有参数，因为 resolve 还没有开始执行。这里涉及到 javascript
-线程的问题。
-
+现在如果传递的是同步的方法，已经得到了想要的结果。但是目的是还想在传递异步方法的时候，使用 then 方法，如果这个时候将
+方法改写：将会得到` Uncaught TypeError: Cannot read property 'name' of undefined `。
+因思考一下，现在 then 和 resolve 的执行顺序，怎么才能让程序得到想要的结果？
 :::tip
 在单线程中，事件是以队列的方式执行的。如果两个事件同时发生，那么总会有事件没有按照预想执行。在 javascript 事件中，存在三种执行
 方式，顺序执行，微任务，宏任务。
@@ -188,67 +174,123 @@ function fun() {
 }
 ```
 :::
+## 更改执行队列
 
-继续回到 Promise ，**一个 Promise 的当前状态必须为以下三种状态中的一种：等待态（Pending）、执行态（Fulfilled）和拒绝态（Rejected）。**
-根据不同的状态可以设置 resolve 的执行方式。
 ```javascript
-  MyPromise.prototype.then = function(onfulfilled,onrejected) {
-  var _state = this._state
-    if(_state) {
-      onfulfilled(this._result)
-    }else {
-      subscribe()
-    }
-  }
-  
-  function subscribe() {
-    
-  }
+setTimeout(()=>{
+	resolve(this,value)
+},0)
 ```
-:::tip
-这里是另一个关键点，在状态为 PENDING 的时候， 建立一个队列，将想要执行的 onfulfilled 加入到队列中，然后当 resolve 方法执行后，通知队列中的
-方法。
-:::
+但是问题又出现了，执行队列是在 then 之后了，但是 callback 却先于 resolve 执行了。所以还要再思考一下，如果 resolve 中的 value
+是一篇文章，callback 是订阅文章的人，那么只需要在 then 方法中订阅，等待 resolve 执行成功之后，文章发布在通知订阅者。
+
+重新整理下目前的结构：
 ```javascript
 'use strict'
-
+// 执行传入的参数
 var PENDING = void 0
 var FULFILLED = 1
 var REJECTED = 2
-// 构造函数
+// 执行传入的参数
 function MyPromise(excutor) {
-  // 初始化状态和返回值
-  this._state = this.result = void 0
-  // 初始化订阅者
-  this.subscribers = []
+	// 初始化当前状态和返回值
+	this._state = this._result = void 0
+	this._subscribers = []
+  initialize(this,excutor)
 }
 
-MyPromise.prototype.then = function(onFulfilled,onRejected) {
-  var _state = this._state
-  var child = new this.constructor()
-  // 如果状态是 fulfilled 或 rejected
-  if(_state) {
-    asap()
-  }else {// 如果状态是 pending
-    subscribe()
+MyPromise.prototype.then = function(onfulfilled,onrejected) {
+  if(this._state) {
+  	onfulfilled(this._result)
+  }else {
+  	subscribe()
   }
-  // 返回一个promise 保证链式调用
-  return child
 }
 
-// 订阅
-function subscribe() {
-  
+// 初始化函数
+function initialize(promise,excutor) {
+	excutor((value) => {
+			resolve(promise,value)
+  },(reson) => {})
 }
 
-// 发布
-function publish() {
-  
+function resolve(promise,value) {
+	promise._state = FULFILLED
+	promise._result = value
 }
 
 // 尽快执行
 function asap() {
-  
+	
 }
 
+// 发布者
+function publish() {
+	
+}
+
+// 订阅者
+function subscribe() {
+	
+}
+```
+## 现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将 resolve 置入事件队列末尾，执行 then 方法后，状态是 PENDING，
+订阅，然后等待 resolve ，执行成功，发布：
+
+```javascript
+'use strict'
+// 执行传入的参数
+var PENDING = void 0
+var FULFILLED = 1
+var REJECTED = 2
+// 执行传入的参数
+function MyPromise(excutor) {
+	// 初始化当前状态和返回值
+	this._state = this._result = void 0
+	this._subscribers = []
+  initialize(this,excutor)
+}
+
+MyPromise.prototype.then = function(onfulfilled,onrejected) {
+	var parent = this
+  if(this._state) {
+  	onfulfilled(this._result)
+  }else {
+  	subscribe(parent,onfulfilled,onrejected)
+  }
+}
+
+// 初始化函数
+function initialize(promise,excutor) {
+	excutor((value) => {
+			resolve(promise,value)
+  },(reson) => {})
+}
+
+function resolve(promise,value) {
+	promise._state = FULFILLED
+	promise._result = value
+	if(promise._subscribers.length>0) {
+		asap(promise)
+	}
+}
+
+// 尽快执行
+function asap(promise) {
+	setTimeout(()=>{
+		publish(promise)
+	},0)
+}
+
+// 发布者
+function publish(promise) {
+	promise._subscribers[1](promise._result)
+}
+
+// 订阅者
+function subscribe(parent,onfulfilled,onrejected) {
+	parent._subscribers[0] = parent
+	parent._subscribers[1] = onfulfilled
+	parent._subscribers[2] = onrejected
+}
 ```
