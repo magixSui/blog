@@ -83,10 +83,18 @@ var promise1 = new Promise((resolve, reject) => {
       })
 ```
 同步执行
+思考一个场景：有这样一个页面，根据后台提供的接口需要分别初始化字典数据，展示信息，banner 信息。应该在什么时候执行
+页面代码？
+
+<img :src="$withBase('/javascript/resolving.png')" alt="fps">
+
 ```javascript
 Promise.all([promise1,promise2,promise3]).then(res=>{})
 .catch(err=>{})
 ```
+
+项目代码解耦，也可以利用 Promise 来封装函数达到解耦项目的目的。
+
 ## 正式开始
 考虑一个基础的场景。有一个后台请求getName，我们需要在请求之后获取名字的值，如果使用 Promise 
 来实现这个功能我通常会：
@@ -234,7 +242,8 @@ function subscribe() {
 	
 }
 ```
-## 现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将 resolve 置入事件队列末尾，执行 then 方法后，状态是 PENDING，
+
+现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将 resolve 置入事件队列末尾，执行 then 方法后，状态是 PENDING，
 订阅，然后等待 resolve ，执行成功，发布：
 
 ```javascript

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>基于 promise A+ 实现一个 promise | MAGIX</title>
+    <meta name="description" content="Just playing around">
+    
+    
+    <link rel="preload" href="/blog/assets/css/0.styles.7bd0526b.css" as="style"><link rel="preload" href="/blog/assets/js/app.5da43104.js" as="script"><link rel="preload" href="/blog/assets/js/2.cb08ffc2.js" as="script"><link rel="preload" href="/blog/assets/js/18.99e713fe.js" as="script"><link rel="prefetch" href="/blog/assets/js/10.c889415a.js"><link rel="prefetch" href="/blog/assets/js/11.a9bb9ddc.js"><link rel="prefetch" href="/blog/assets/js/12.f0d6dacf.js"><link rel="prefetch" href="/blog/assets/js/13.de127cbf.js"><link rel="prefetch" href="/blog/assets/js/14.239aba92.js"><link rel="prefetch" href="/blog/assets/js/15.c32c4e31.js"><link rel="prefetch" href="/blog/assets/js/16.ebc34579.js"><link rel="prefetch" href="/blog/assets/js/17.18c8c7bc.js"><link rel="prefetch" href="/blog/assets/js/19.3ed77ffd.js"><link rel="prefetch" href="/blog/assets/js/20.1e736781.js"><link rel="prefetch" href="/blog/assets/js/21.c1f2e4fa.js"><link rel="prefetch" href="/blog/assets/js/22.9d8fd267.js"><link rel="prefetch" href="/blog/assets/js/23.57f6a2cc.js"><link rel="prefetch" href="/blog/assets/js/24.cbd5e179.js"><link rel="prefetch" href="/blog/assets/js/25.62749838.js"><link rel="prefetch" href="/blog/assets/js/26.7880126b.js"><link rel="prefetch" href="/blog/assets/js/27.6b23b846.js"><link rel="prefetch" href="/blog/assets/js/28.5067e2e7.js"><link rel="prefetch" href="/blog/assets/js/29.70b81df7.js"><link rel="prefetch" href="/blog/assets/js/3.91665c3e.js"><link rel="prefetch" href="/blog/assets/js/30.0c7299ca.js"><link rel="prefetch" href="/blog/assets/js/31.c1b869e3.js"><link rel="prefetch" href="/blog/assets/js/32.e9a8091f.js"><link rel="prefetch" href="/blog/assets/js/33.4ac80df4.js"><link rel="prefetch" href="/blog/assets/js/34.0684d59c.js"><link rel="prefetch" href="/blog/assets/js/35.4a7cc825.js"><link rel="prefetch" href="/blog/assets/js/36.d133f933.js"><link rel="prefetch" href="/blog/assets/js/37.e8e7bd31.js"><link rel="prefetch" href="/blog/assets/js/4.404fcced.js"><link rel="prefetch" href="/blog/assets/js/5.cb9f65fa.js"><link rel="prefetch" href="/blog/assets/js/6.ff2aba5c.js"><link rel="prefetch" href="/blog/assets/js/7.dceb807f.js"><link rel="prefetch" href="/blog/assets/js/8.926677a4.js"><link rel="prefetch" href="/blog/assets/js/9.49131c37.js">
+    <link rel="stylesheet" href="/blog/assets/css/0.styles.7bd0526b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/blog/" class="home-link router-link-active"><!----> <span class="site-name">MAGIX</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/blog/javascript/" class="nav-link router-link-active">博客</a></div><div class="nav-item"><a href="https://github.com/magicxin" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/blog/javascript/" class="nav-link router-link-active">博客</a></div><div class="nav-item"><a href="https://github.com/magicxin" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><div class="sidebar-group first collapsable"><p class="sidebar-heading open"><span>javascript</span> <span class="arrow down"></span></p> <ul class="sidebar-group-items"><li><a href="/blog/javascript/" class="sidebar-link">javascript 简述</a></li><li><a href="/blog/javascript/understand-script.html" class="sidebar-link">搞清 &lt;script&gt;</a></li><li><a href="/blog/javascript/syntax.html" class="sidebar-link">javascript 语法</a></li><li><a href="/blog/javascript/es6.html" class="sidebar-link">es6 语法</a></li><li><a href="/blog/javascript/analysis.html" class="sidebar-link">内存泄漏与性能分析</a></li><li><a href="/blog/javascript/defineProperty.html" class="sidebar-link">快速弄懂 defineProperty</a></li><li><a href="/blog/javascript/promise.html" class="active sidebar-link">实现一个promise</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#开始之前" class="sidebar-link">开始之前</a></li><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#正式开始" class="sidebar-link">正式开始</a></li><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#创建自己的-promise" class="sidebar-link">创建自己的 Promise</a></li><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#执行" class="sidebar-link">执行</a></li><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#更改执行队列" class="sidebar-link">更改执行队列</a></li><li class="sidebar-sub-header"><a href="/blog/javascript/promise.html#现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将-resolve-置入事件队列末尾，执行-then-方法后，状态是-pending，" class="sidebar-link">现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将 resolve 置入事件队列末尾，执行 then 方法后，状态是 PENDING，</a></li></ul></li><li><a href="/blog/javascript/es6-promise.html" class="sidebar-link">es6-promise</a></li></ul></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>nodejs</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>three.js</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>解决方案</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>linux</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>vue 源码学习</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>系统架构设计师</span> <span class="arrow right"></span></p> <!----></div></li><li><div class="sidebar-group collapsable"><p class="sidebar-heading"><span>草稿箱</span> <span class="arrow right"></span></p> <!----></div></li></ul> </div> <div class="page"> <div class="content default"><h1 id="基于-promise-a-实现一个-promise"><a href="#基于-promise-a-实现一个-promise" aria-hidden="true" class="header-anchor">#</a> 基于 promise A+ 实现一个 promise</h1> <p><a href="https://promisesaplus.com/" target="_blank" rel="noopener noreferrer">promise A+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> <a href="https://malcolmyu.github.io/2015/06/12/Promises-A-Plus/#note-4" target="_blank" rel="noopener noreferrer">中文<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <h2 id="开始之前"><a href="#开始之前" aria-hidden="true" class="header-anchor">#</a> 开始之前</h2> <p>在实现 Promise 之前，首先要熟悉 Promise Api,如果还没有使用过 Promise,那么请先尝试使用它。
+Promise 是 ES2015 一个标准的 javascript 内置对象。主要为了解决丑陋的回调地狱：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 传统回调地狱</span>
+  axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span>res1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//...</span>
+    axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span>res2<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//...</span>
+      axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span>res3<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">//...</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 链式调用</span>
+  axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res1<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    <span class="token comment">//...</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res2<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    <span class="token comment">//...</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res3<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    <span class="token comment">//...</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="properties"><a href="#properties" aria-hidden="true" class="header-anchor">#</a> properties</h3> <ul><li>prototype</li></ul> <h3 id="methods"><a href="#methods" aria-hidden="true" class="header-anchor">#</a> Methods</h3> <ul><li>Promise.all()</li> <li>Promise.race()</li> <li>Promise.reject()</li> <li>Promise.resolve()</li> <li>Promise.prototype.catch()</li> <li>Promise.prototype.finally()</li> <li>Promise.prototype.then()</li> <li>Promise.prototype.constructor()</li></ul> <h3 id="syntex"><a href="#syntex" aria-hidden="true" class="header-anchor">#</a> Syntex</h3> <p>初始化一个 Promise 对象</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span>executor<span class="token punctuation">)</span>
+<span class="token comment">// 将一个异步函数延迟执行</span>
+<span class="token keyword">var</span> promise1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>name<span class="token punctuation">:</span>magix<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>顺序执行</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code>  <span class="token keyword">let</span> promise1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+            <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              name<span class="token punctuation">:</span><span class="token string">'magix'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> promise2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+            <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              name<span class="token punctuation">:</span><span class="token string">'ella'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> promise3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+            <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              name<span class="token punctuation">:</span><span class="token string">'matin'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      promise1<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> promise2
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> promise3
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>同步执行
+思考一个场景：有这样一个页面，根据后台提供的接口需要分别初始化字典数据，展示信息，banner 信息。应该在什么时候执行
+页面代码？</p> <img src="/blog/javascript/resolving.png" alt="fps"> <div class="language-javascript extra-class"><pre class="language-javascript"><code>Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>promise1<span class="token punctuation">,</span>promise2<span class="token punctuation">,</span>promise3<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res<span class="token operator">=&gt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token operator">=&gt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>项目代码解耦，也可以利用 Promise 来封装函数达到解耦项目的目的。</p> <h2 id="正式开始"><a href="#正式开始" aria-hidden="true" class="header-anchor">#</a> 正式开始</h2> <p>考虑一个基础的场景。有一个后台请求getName，我们需要在请求之后获取名字的值，如果使用 Promise
+来实现这个功能我通常会：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 为了方便，我使用了 setTimeout 来代替接口请求</span>
+<span class="token keyword">var</span> <span class="token function-variable function">getName</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">MyPromise</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+          <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+            <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              name<span class="token punctuation">:</span><span class="token string">'magix'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2000</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+      <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>res<span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="创建自己的-promise"><a href="#创建自己的-promise" aria-hidden="true" class="header-anchor">#</a> 创建自己的 Promise</h2> <p>这个时候因为不存在 MyPromise，需要创建它：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 因为这里将 MyPromise 作为构造函数而不是一个普通函数，所以建议采用大写开头</span>
+<span class="token keyword">function</span> <span class="token function">MyPromise</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><p>当然，现在会得到一个错误： <code>Uncaught TypeError: getName(...).then is not a function</code>，因为到目前
+还没有创建 then 函数，创建它。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code>MyPromise<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">then</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  
+<span class="token punctuation">}</span>
+</code></pre></div><p>现在不会报错了，但是并不会得到想要的输出，因为实例化的Promise传入了一个参数。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">function</span> <span class="token function">MyPromise</span><span class="token punctuation">(</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">excutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>excutor 函数作为参数传递时，含有两个参数，分别是 resolve 和 reject，这两个参数分别又是两个函数。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 传入两个匿名函数作为 handle </span>
+<span class="token function">excutor</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span>reson<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="执行"><a href="#执行" aria-hidden="true" class="header-anchor">#</a> 执行</h2> <p>现在可以初始化构造函数执行 then 方法了，但是还没有将 callback 传递进来。现在的思路是，通过执行 resolve 方法，
+将当前对象 promise得内部属性 _result 赋值为 value,然后执行 then 中的 callback。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">function</span> <span class="token function">MyPromise</span><span class="token punctuation">(</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">this</span><span class="token punctuation">.</span>_result <span class="token operator">=</span> <span class="token keyword">void</span> <span class="token number">0</span>
+  <span class="token function">excutor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  	<span class="token function">resolve</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span>value<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token punctuation">(</span>reson<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+MyPromise<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">then</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>onfulfilled<span class="token punctuation">,</span>onrejected<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">onfulfilled</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>_result<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	promise<span class="token punctuation">.</span>_result <span class="token operator">=</span> value
+<span class="token punctuation">}</span>
+</code></pre></div><p>现在如果传递的是同步的方法，已经得到了想要的结果。但是目的是还想在传递异步方法的时候，使用 then 方法，如果这个时候将
+方法改写：将会得到<code>Uncaught TypeError: Cannot read property 'name' of undefined</code>。
+因思考一下，现在 then 和 resolve 的执行顺序，怎么才能让程序得到想要的结果？</p> <div class="tip custom-block"><p class="custom-block-title">TIP</p> <p>在单线程中，事件是以队列的方式执行的。如果两个事件同时发生，那么总会有事件没有按照预想执行。在 javascript 事件中，存在三种执行
+方式，顺序执行，微任务，宏任务。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 思考一下执行顺序</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token function">fun</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> promise1 <span class="token operator">=</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'resolve'</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token keyword">function</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div></div> <h2 id="更改执行队列"><a href="#更改执行队列" aria-hidden="true" class="header-anchor">#</a> 更改执行队列</h2> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+	<span class="token function">resolve</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span>value<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+</code></pre></div><p>但是问题又出现了，执行队列是在 then 之后了，但是 callback 却先于 resolve 执行了。所以还要再思考一下，如果 resolve 中的 value
+是一篇文章，callback 是订阅文章的人，那么只需要在 then 方法中订阅，等待 resolve 执行成功之后，文章发布在通知订阅者。</p> <p>重新整理下目前的结构：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token string">'use strict'</span>
+<span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">var</span> <span class="token constant">PENDING</span> <span class="token operator">=</span> <span class="token keyword">void</span> <span class="token number">0</span>
+<span class="token keyword">var</span> <span class="token constant">FULFILLED</span> <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token keyword">var</span> <span class="token constant">REJECTED</span> <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">function</span> <span class="token function">MyPromise</span><span class="token punctuation">(</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 初始化当前状态和返回值</span>
+	<span class="token keyword">this</span><span class="token punctuation">.</span>_state <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>_result <span class="token operator">=</span> <span class="token keyword">void</span> <span class="token number">0</span>
+	<span class="token keyword">this</span><span class="token punctuation">.</span>_subscribers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span>excutor<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+MyPromise<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">then</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>onfulfilled<span class="token punctuation">,</span>onrejected<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>_state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  	<span class="token function">onfulfilled</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>_result<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+  	<span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 初始化函数</span>
+<span class="token keyword">function</span> <span class="token function">initialize</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token function">excutor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+			<span class="token function">resolve</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>value<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token punctuation">(</span>reson<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	promise<span class="token punctuation">.</span>_state <span class="token operator">=</span> <span class="token constant">FULFILLED</span>
+	promise<span class="token punctuation">.</span>_result <span class="token operator">=</span> value
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 尽快执行</span>
+<span class="token keyword">function</span> <span class="token function">asap</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 发布者</span>
+<span class="token keyword">function</span> <span class="token function">publish</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 订阅者</span>
+<span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将-resolve-置入事件队列末尾，执行-then-方法后，状态是-pending，"><a href="#现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将-resolve-置入事件队列末尾，执行-then-方法后，状态是-pending，" aria-hidden="true" class="header-anchor">#</a> 现在思路滤清了，需要将每个方法细节详细的填充完整。先执行构造函数，将 resolve 置入事件队列末尾，执行 then 方法后，状态是 PENDING，</h2> <p>订阅，然后等待 resolve ，执行成功，发布：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token string">'use strict'</span>
+<span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">var</span> <span class="token constant">PENDING</span> <span class="token operator">=</span> <span class="token keyword">void</span> <span class="token number">0</span>
+<span class="token keyword">var</span> <span class="token constant">FULFILLED</span> <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token keyword">var</span> <span class="token constant">REJECTED</span> <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token comment">// 执行传入的参数</span>
+<span class="token keyword">function</span> <span class="token function">MyPromise</span><span class="token punctuation">(</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 初始化当前状态和返回值</span>
+	<span class="token keyword">this</span><span class="token punctuation">.</span>_state <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>_result <span class="token operator">=</span> <span class="token keyword">void</span> <span class="token number">0</span>
+	<span class="token keyword">this</span><span class="token punctuation">.</span>_subscribers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span>excutor<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+MyPromise<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">then</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>onfulfilled<span class="token punctuation">,</span>onrejected<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> parent <span class="token operator">=</span> <span class="token keyword">this</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>_state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  	<span class="token function">onfulfilled</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>_result<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+  	<span class="token function">subscribe</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span>onfulfilled<span class="token punctuation">,</span>onrejected<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 初始化函数</span>
+<span class="token keyword">function</span> <span class="token function">initialize</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>excutor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token function">excutor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+			<span class="token function">resolve</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>value<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token punctuation">(</span>reson<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>promise<span class="token punctuation">,</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	promise<span class="token punctuation">.</span>_state <span class="token operator">=</span> <span class="token constant">FULFILLED</span>
+	promise<span class="token punctuation">.</span>_result <span class="token operator">=</span> value
+	<span class="token keyword">if</span><span class="token punctuation">(</span>promise<span class="token punctuation">.</span>_subscribers<span class="token punctuation">.</span>length<span class="token operator">&gt;</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token function">asap</span><span class="token punctuation">(</span>promise<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 尽快执行</span>
+<span class="token keyword">function</span> <span class="token function">asap</span><span class="token punctuation">(</span>promise<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+		<span class="token function">publish</span><span class="token punctuation">(</span>promise<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 发布者</span>
+<span class="token keyword">function</span> <span class="token function">publish</span><span class="token punctuation">(</span>promise<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	promise<span class="token punctuation">.</span>_subscribers<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">(</span>promise<span class="token punctuation">.</span>_result<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 订阅者</span>
+<span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span>onfulfilled<span class="token punctuation">,</span>onrejected<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	parent<span class="token punctuation">.</span>_subscribers<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> parent
+	parent<span class="token punctuation">.</span>_subscribers<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> onfulfilled
+	parent<span class="token punctuation">.</span>_subscribers<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> onrejected
+<span class="token punctuation">}</span>
+</code></pre></div></div> <div class="page-edit"><!----> <!----></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/blog/javascript/defineProperty.html" class="prev">
+          快速弄懂 defineProperty
+        </a></span> <span class="next"><a href="/blog/javascript/es6-promise.html">
+          es6-promise
+        </a>
+        →
+      </span></p></div> </div></div><div class="global-ui"></div></div>
+    <script src="/blog/assets/js/app.5da43104.js" defer></script><script src="/blog/assets/js/2.cb08ffc2.js" defer></script><script src="/blog/assets/js/18.99e713fe.js" defer></script>
+  </body>
+</html>
