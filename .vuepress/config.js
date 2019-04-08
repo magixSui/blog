@@ -32,6 +32,15 @@ module.exports = {
         ]
       },
       {
+        title: '网络协议',
+        collapsable: true,
+        children: [
+          ['../browser/', '简述'],
+          ['../browser/application', '应用层协议 '],
+          ['../browser/xhr', 'XMLHttpRequest '],
+        ]
+      },
+      {
         title: 'three.js',
         collapsable: true,
         children: [
