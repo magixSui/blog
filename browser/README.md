@@ -6,6 +6,9 @@
 ，也需要这样一种语言进行沟通，它就是网络协议。作为协议需要有一定的标准，大家都按照这个标准来实现，那么 internet 的接入
 和通讯就没有什么问题了。
 ## osi 七层协议与 tcp/ip 五层/四层协议
+
+<img :src="$withBase('/browser/protocol.png')" alt="fps">
+
 简单的来说， osi 七层协议是理论协议，真正的实现是 tcp/ip 四层协议。而实现的概念就是 tcp/ip 五层协议。
 - osi : 应用层（Application）、表示层（Presentation）、会话层（Session）、传输层（Transport）、网络层（Network）、数据链路层（Data Link）、物理层（Physical）
 - tcp/ip 5层 ： 应用层、运输层、网络层、数据链路层和物理层

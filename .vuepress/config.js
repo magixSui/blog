@@ -85,6 +85,13 @@ module.exports = {
         ]
       },
       {
+        title: 'android',
+        collapsable: true,
+        children: [
+          ['../android/create', '入门'],
+        ]
+      },
+      {
         title: '草稿箱',
         collapsable: true,
         children: [
