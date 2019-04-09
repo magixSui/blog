@@ -92,6 +92,13 @@ module.exports = {
         ]
       },
       {
+        title: 'science',
+        collapsable: true,
+        children: [
+          ['../science/bezier', '贝塞尔曲线'],
+        ]
+      },
+      {
         title: '草稿箱',
         collapsable: true,
         children: [
