@@ -20,6 +20,7 @@ module.exports = {
           ['../javascript/defineProperty.md', '快速弄懂 defineProperty'],
           ['../javascript/promise.md', '实现一个promise'],
           ['../javascript/es6-promise.md', 'es6-promise'],
+          ['../javascript/forEach.md', 'forEach'],
         ]
       },
       {
