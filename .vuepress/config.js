@@ -33,11 +33,18 @@ module.exports = {
         ]
       },
       {
+        title: 'typescript',
+        collapsable: true,
+        children: [
+          ['../typescript/design.md', '解决方案'],
+        ]
+      },
+      {
         title: '网络协议',
         collapsable: true,
         children: [
           ['../browser/', '简述'],
-          ['../browser/application', '应用层协议 '],
+          ['../browser/application', '应用层协议'],
           ['../browser/xhr', 'XMLHttpRequest '],
         ]
       },
@@ -83,6 +90,13 @@ module.exports = {
         children: [
           ['../system-architect/operating-system', '操作系统'],
           ['../system-architect/database', '数据库'],
+        ]
+      },
+      {
+        title: '前端架构',
+        collapsable: true,
+        children: [
+          ['../front-design/front-design', '前端架构设计'],
         ]
       },
       {
