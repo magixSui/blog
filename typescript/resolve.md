@@ -48,3 +48,19 @@ interface Config {
 // 确保有值
 @Prop() private avatar!: string;
 ```
+## 使用 props
+
+## watch
+
+## 使用 beforeRouteEnter
+```javascript
+import { Component, Vue } from 'vue-property-decorator';
+
+Component.registerHooks([
+    'beforeRouteEnter',
+    'beforeRouteLeave',
+    'beforeRouteUpdate', // for vue-router 2.2+
+  ]);
+  
+private beforeRouteEnter
+``` 
