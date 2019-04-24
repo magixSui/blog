@@ -84,6 +84,13 @@ module.exports = {
           ['../vue-resourse/config.md', '全局配置'],
         ]
       },
+//    {
+//      title: 'element 源码学习',
+//      collapsable: true,
+//      children: [
+//        ['../element/start.md', '开始'],
+//      ]
+//    },
       {
         title: '系统架构设计师',
         collapsable: true,
@@ -99,13 +106,13 @@ module.exports = {
           ['../front-design/front-design', '前端架构设计'],
         ]
       },
-      {
-        title: 'android',
-        collapsable: true,
-        children: [
-          ['../android/create', '入门'],
-        ]
-      },
+//    {
+//      title: 'android',
+//      collapsable: true,
+//      children: [
+//        ['../android/create', '入门'],
+//      ]
+//    },
       {
         title: 'science',
         collapsable: true,

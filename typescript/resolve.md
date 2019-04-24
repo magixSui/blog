@@ -64,3 +64,7 @@ Component.registerHooks([
   
 private beforeRouteEnter
 ``` 
+##  Property 'files' does not exist on type 'EventTarget'
+```
+https://stackoverflow.com/questions/43176560/property-files-does-not-exist-on-type-eventtarget-error-in-typescript
+```
