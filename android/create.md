@@ -41,6 +41,11 @@ android sdk location should not contain whitespace,sdk 的安装目录不能包�
 
 <img :src="$withBase('/android/hello.jpg')"/>
 
+:::tip
+出现 Error Installing APKs，打开 file/settings/build,execution,deployment/instant run/首项 
+enable 选框去掉勾选
+:::
+
 ## 创建一个 webview
 接下来就是需要做的核心内容了，现在的思路是，在 activity 中创建 webview，通过 webview 加载服务器端（为了提速也可以放在项目中）的代码，
 显示在页面上，我整理了一下加载 webview 的步骤：
