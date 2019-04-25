@@ -106,13 +106,14 @@ module.exports = {
           ['../front-design/front-design', '前端架构设计'],
         ]
       },
-//    {
-//      title: 'android',
-//      collapsable: true,
-//      children: [
-//        ['../android/create', '入门'],
-//      ]
-//    },
+      {
+        title: 'android',
+        collapsable: true,
+        children: [
+          ['../android/create', '入门'],
+          ['../android/mainfest', 'mainfest'],
+        ]
+      },
       {
         title: 'science',
         collapsable: true,
