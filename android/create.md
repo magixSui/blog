@@ -121,3 +121,10 @@ android-studio 中 java 代码可以自动转换为 kotlin 。此处有些类似
 // 改为 kotlin 推荐的方式调用 webViewClient 的 get set 方法
 webView!!.webViewClient = webClient
 ```
+### 调试开发环境
+首先开启自己的前端项目，确保手机和 pc 处于同一局域网，然后修改 webview 访问地址。
+
+<img :src="$withBase('/android/enable-js.jpg')"/>
+
+
+
