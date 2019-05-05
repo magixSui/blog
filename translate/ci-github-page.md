@@ -26,7 +26,7 @@ deploy:
 你想要在你的仓库设置或在 `.travis.yml` 中通过加密变量的方式安全的将他发送到  Travis 。
 
 ## 之后的配置
-- local_dir: Directory to push to GitHub Pages, defaults to current directory. Can be specified as an absolute path or a relative path from the current directory.
+- local_dir: 推送到 Github Page 的目录，默认当前目录。 可以通过绝对路径或相对路径特殊指定。
 - repo: Repo slug, defaults to current repo.
 - target_branch: Branch to (force, see: keep_history) push local_dir contents to, defaults to gh_pages.
 - keep_history: Optional, create incremental commit instead of doing push force, defaults to false.
