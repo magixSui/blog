@@ -5,7 +5,7 @@ script:
 deploy:
     provider: pages
     skip_cleanup: true
-    github_token: d0dfa78e334a5587fa723f0e057b7d974994a2bd
+    github_token: e4d71d361b019ce0498ed73a1a5080e81b0a23af
     local-dir: ./vuepress/dist/
     keep_history: true
     on: 
