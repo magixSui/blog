@@ -12,7 +12,8 @@ module.exports = {
         title: 'javascript',
         collapsable: true,
         children: [
-          ['../javascript/', 'javascript 简述'],
+        ['../javascript/', '序'],
+          ['../javascript/preface.md', 'javascript 简述'],
           ['../javascript/understand-script.md', '搞清 <script>'],
           ['../javascript/syntax.md', 'javascript 语法'],
           ['../javascript/es6.md', 'es6 语法'],
@@ -21,6 +22,7 @@ module.exports = {
           ['../javascript/promise.md', '实现一个promise'],
           ['../javascript/es6-promise.md', 'es6-promise'],
           ['../javascript/forEach.md', 'forEach'],
+          ['../javascript/transfer.md', '转换方法'],
         ]
       },
       {
@@ -67,6 +69,11 @@ module.exports = {
           ['../base-on-requirement/autodeploy.md', '基于git自动部署'],
           ['../base-on-requirement/transfer.md', '进制转换'],
           ['../base-on-requirement/SEO.md', '百度搜索优化'],
+          ['../base-on-requirement/speech.md', '语音输入'],
+          ['../base-on-requirement/ngrok.md', '内网穿透'],
+          ['../base-on-requirement/https.md', 'https 腾讯云'],
+          ['../base-on-requirement/autodeploy-github.md', 'github自动部署'],
+          ['../base-on-requirement/pm2.md', 'pm2 管理 node 项目'],
         ]
       },
       {
@@ -119,6 +126,14 @@ module.exports = {
         collapsable: true,
         children: [
           ['../science/bezier', '贝塞尔曲线'],
+        ]
+      },
+      {
+        title: '翻译',
+        collapsable: true,
+        children: [
+          ['../translate/ci-concepts.md', '持续集成核心概念'],
+          ['../translate/ci-tutorial.md', 'Travis-cli 教程'],
         ]
       },
       {
