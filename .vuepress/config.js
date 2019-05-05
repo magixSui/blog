@@ -38,7 +38,7 @@ module.exports = {
         title: 'typescript',
         collapsable: true,
         children: [
-          ['../typescript/design.md', '解决方案'],
+          ['../typescript/resolve.md', '解决方案'],
         ]
       },
       {
