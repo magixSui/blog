@@ -5,6 +5,9 @@ install:
 - npm install
 script:
 - npm run build
+after_script:
+  - git config user.name "${GIT_NAME}"
+  - git config user.email "${GIT_EMAIL}"
 cache:
   directories:
   - node_modules # 依赖缓存的目录
