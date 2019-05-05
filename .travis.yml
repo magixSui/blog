@@ -2,7 +2,6 @@ deploy
     provider: pages
     skip_cleanup: true
     github_token: b41ced1e9d73a33d54dc3bd641890db1fe8d98dc
-    local-dir: ./blog/
     keep_history: true
     on: 
         branch: master
