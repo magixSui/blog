@@ -1,11 +1,16 @@
+language: node_js # 构建所需的语言环境
+node_js:
+  - "v11.14.0"  # 对应的版本
 install:
 - npm install
 script:
 - npm run build
+cache:
+  directories:
+  - node_modules # 依赖缓存的目录
 deploy:
     provider: pages
     skip_cleanup: true
-    github_token: 859eddb45729ed528e364c6f30404d6f709fe51f
     local-dir: ./vuepress/dist/
     keep_history: true
     on: 
