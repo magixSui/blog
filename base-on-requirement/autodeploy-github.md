@@ -72,4 +72,22 @@ deploy
 ```
 local-dir: ./.vuepress/dist/
 ```
-travis 会自动将目录下的静态资源推送到默认的 gh-pages 分支上。
+travis 会自动将目录下的静态资源推送到默认的 gh-pages 分支上，但是现在的资源是本地上传的，现在仍需要手动执行 `npm run build`。我们的目的是
+push 后全自动的部署，这个功能 travis 也提供给我们了（真的方便啊） 。
+```
+install:
+    - npm install
+script:
+    - npm run build
+```
+travis 帮我们执行了安装命令加载依赖，执行了脚本完成静态资源打包，当然可以加上依赖缓存，让构建更迅速。现在已经可以跑起来了。
+
+<img :src="$withBase('/base-on-requirement/css-error.png')" >
+
+可以看到 css 没有加载，并且如果点击，跳转链接失效了。在 vue-press 官网中，如果你打算发布到 https://<USERNAME>.github.io/<REPO>/
+（也就是说你的仓库在 https://github.com/<USERNAME>/<REPO>），则将 base 设置为 "/<REPO>/"。
+
+按照这个方式更改 base 。
+
+
+
