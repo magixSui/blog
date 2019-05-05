@@ -28,7 +28,7 @@ deploy:
 ## 之后的配置
 - local_dir: 推送到 Github Page 的目录，默认当前目录。 可以通过绝对路径或相对路径特殊指定。
 - repo: Repo slug, 默认当前 repo.
-- target_branch: Branch to (force, see: keep_history) push local_dir contents to, defaults to gh_pages.
+- target_branch: 推送 local_dir 内容到分支（force，查看: keep_history）, 默认  gh_pages。
 - keep_history: Optional, create incremental commit instead of doing push force, defaults to false.
 - fqdn: Optional, sets a custom domain for your website, defaults to no custom domain support.
 - project_name: Defaults to value of fqdn or repo slug, used for metadata.
