@@ -134,6 +134,8 @@ module.exports = {
         children: [
           ['../translate/ci-concepts.md', '持续集成核心概念'],
           ['../translate/ci-tutorial.md', 'Travis-cli 教程'],
+          ['../translate/ci-github-page.md', 'github page 部署'],
+          ['../translate/ci-node-project.md', 'node 项目部署'],
         ]
       },
       {
