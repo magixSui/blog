@@ -1,4 +1,8 @@
-deploy
+install:
+- npm install
+script:
+- npm run build
+deploy:
     provider: pages
     skip_cleanup: true
     github_token: b41ced1e9d73a33d54dc3bd641890db1fe8d98dc
