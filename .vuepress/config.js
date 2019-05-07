@@ -88,7 +88,8 @@ module.exports = {
         collapsable: true,
         children: [
           ['../vue-resourse/', '介绍'],
-          ['../vue-resourse/config.md', '全局配置'],
+//        ['../vue-resourse/config.md', '全局配置'],
+          ['../vue-resourse/init.md', '首次提交'],
         ]
       },
 //    {
@@ -136,6 +137,13 @@ module.exports = {
           ['../translate/ci-tutorial.md', 'Travis-cli 教程'],
           ['../translate/ci-github-page.md', 'github page 部署'],
           ['../translate/ci-node-project.md', 'node 项目部署'],
+        ]
+      },
+      {
+        title: '技术入门',
+        collapsable: true,
+        children: [
+          ['../utils/grunt.md', 'grunt 入门'],
         ]
       },
       {

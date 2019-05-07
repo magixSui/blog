@@ -84,10 +84,11 @@ travis 帮我们执行了安装命令加载依赖，执行了脚本完成静态�
 
 <img :src="$withBase('/base-on-requirement/css-error.png')" >
 
-可以看到 css 没有加载，并且如果点击，跳转链接失效了。在 vue-press 官网中，如果你打算发布到 https://<USERNAME>.github.io/<REPO>/
-（也就是说你的仓库在 https://github.com/<USERNAME>/<REPO>），则将 base 设置为 "/<REPO>/"。
+可以看到 css 没有加载，并且如果点击，跳转链接失效了。在 vue-press 官网中，如果你打算发布到 `https://<USERNAME>.github.io/<REPO>/`
+（也就是说你的仓库在 `https://github.com/<USERNAME>/<REPO>`），则将 base 设置为 `/<REPO>/`。
 
-按照这个方式更改 base 。
+按照这个方式更改 base 。第一次并不会成功，提交第二次以后，可以发现，网站能正常访问了。这是因为执行的命令 npm run build 在代码提交完成之前执行。
+
 
 
 
