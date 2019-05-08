@@ -21,7 +21,7 @@ module.exports = {
           ['../javascript/defineProperty.md', '快速弄懂 defineProperty'],
           ['../javascript/promise.md', '实现一个promise'],
           ['../javascript/es6-promise.md', 'es6-promise'],
-          ['../javascript/forEach.md', 'forEach'],
+          ['../javascript/api.md', 'api 进阶'],
           ['../javascript/transfer.md', '转换方法'],
         ]
       },
@@ -90,6 +90,7 @@ module.exports = {
           ['../vue-resourse/', '介绍'],
 //        ['../vue-resourse/config.md', '全局配置'],
           ['../vue-resourse/init.md', '首次提交'],
+          ['../utils/appendix.md', '附录'],
         ]
       },
 //    {
@@ -144,6 +145,7 @@ module.exports = {
         collapsable: true,
         children: [
           ['../utils/grunt.md', 'grunt 入门'],
+          ['../utils/component.md', 'component 入门'],
         ]
       },
       {
