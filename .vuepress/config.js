@@ -90,7 +90,7 @@ module.exports = {
           ['../vue-resourse/', '介绍'],
 //        ['../vue-resourse/config.md', '全局配置'],
           ['../vue-resourse/init.md', '首次提交'],
-          ['../utils/appendix.md', '附录'],
+          ['../vue-resourse/appendix.md', '附录'],
         ]
       },
 //    {

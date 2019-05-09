@@ -76,3 +76,7 @@ replacer(match,p1,p2,ofsset,string)
 // 其中 match 是匹配的字符串，p1 是第一个括号内的匹配，p2 ... offset 是子字符串在原字符串中的偏移量（也就是原来的 index 值），string
 是原字符串。
 ```
+
+## 选择器
+
+### Document​.query​SelectorAll
