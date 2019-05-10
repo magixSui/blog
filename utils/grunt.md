@@ -197,4 +197,17 @@ module.exports = function(grunt) {
     grunt.registerTask('default',['browserify']);
   };
 ```
-
+## 补充
+grunt 可以创建自定义任务来执行。
+```javascript
+grunt.registerTask('all',['jshint']);
+```
+对于多文件任务，可以采取：
+```javascript
+build: {
+  files:[{
+    src:[],
+    dest:''
+  }]
+}
+```
