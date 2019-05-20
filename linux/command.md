@@ -40,3 +40,36 @@ netstat -antup
 ```
 kill -9 17728
 ```
+
+## apt-get 卸载
+
+```
+sudo apt-get remove --purge python-pip
+```
+
+## apt-get 清除下载包
+
+```
+sudo apt-get clean
+```
+
+## 设置 root 密码
+```
+sudo passwd root
+```
+## 切换到 root
+```
+su
+password
+```
+
+## 切换到 用户
+```
+su - user
+```
+
+## 更改只读文件
+```
+:w !sudo tee % 
+选择 l
+```

@@ -12,7 +12,7 @@ module.exports = {
         title: 'javascript',
         collapsable: true,
         children: [
-        ['../javascript/', '序'],
+          ['../javascript/', '序'],
           ['../javascript/preface.md', 'javascript 简述'],
           ['../javascript/understand-script.md', '搞清 <script>'],
           ['../javascript/syntax.md', 'javascript 语法'],
@@ -81,6 +81,9 @@ module.exports = {
         collapsable: true,
         children: [
           ['../linux/command.md', 'linux 操作'],
+          ['../linux/setup.md', 'linux 系统'],
+          ['../linux/shadowsocks.md', 'linux ss'],
+          ['../linux/n-module.md', 'node 版本管理'],
         ]
       },
       {
