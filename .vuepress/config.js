@@ -1,5 +1,5 @@
 module.exports = {
-  base: '/blog_new/',
+  base: '/blog/',
   title: 'MAGIX',
   description: 'Just playing around',
   themeConfig: {
