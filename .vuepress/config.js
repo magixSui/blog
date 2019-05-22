@@ -49,6 +49,13 @@ module.exports = {
           ['../browser/application', '应用层协议'],
           ['../browser/xhr', 'XMLHttpRequest '],
         ]
+      },{
+        title: 'git',
+        collapsable: true,
+        children: [
+          ['../git/create-git-repo.md', '创建 git 仓库'],
+          ['../git/reomove.md', 'git 操作 '],
+        ]
       },
       {
         title: 'three.js',
