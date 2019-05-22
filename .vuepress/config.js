@@ -149,6 +149,7 @@ module.exports = {
         children: [
           ['../utils/grunt.md', 'grunt 入门'],
           ['../utils/component.md', 'component 入门'],
+          ['../utils/stencil.md', 'stencil 入门'],
         ]
       },
       {
