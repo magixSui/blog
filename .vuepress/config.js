@@ -97,10 +97,10 @@ module.exports = {
         title: 'vue 源码学习',
         collapsable: true,
         children: [
-          ['../vue-resourse/', '介绍'],
-//        ['../vue-resourse/config.md', '全局配置'],
-          ['../vue-resourse/init.md', '首次提交'],
-          ['../vue-resourse/appendix.md', '附录'],
+          ['../vue-source/', '介绍'],
+//        ['../vue-source/config.md', '全局配置'],
+          ['../vue-source/init.md', '模板动态绑定'],
+          ['../vue-source/appendix.md', '附录'],
         ]
       },
 //    {
