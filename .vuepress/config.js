@@ -90,7 +90,8 @@ module.exports = {
           ['../linux/command.md', 'linux 操作'],
           ['../linux/setup.md', 'linux 系统'],
           ['../linux/shadowsocks.md', 'linux ss'],
-          ['../linux/n-module.md', 'node 版本管理'],
+          ['../linux/n-module.md', 'n 版本管理'],
+          ['../linux/nvm.md', 'nvm 版本管理'],
         ]
       },
       {
@@ -101,6 +102,7 @@ module.exports = {
 //        ['../vue-source/config.md', '全局配置'],
           ['../vue-source/init.md', '模板动态绑定'],
           ['../vue-source/appendix.md', '附录'],
+          ['../vue-source/init0001.md', '事件拦截器绑定'],
         ]
       },
 //    {
@@ -157,6 +159,7 @@ module.exports = {
           ['../utils/grunt.md', 'grunt 入门'],
           ['../utils/component.md', 'component 入门'],
           ['../utils/stencil.md', 'stencil 入门'],
+          ['../utils/yarn.md', 'yarn 入门'],
         ]
       },
       {
