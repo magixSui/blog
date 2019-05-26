@@ -98,3 +98,9 @@ exit 0
 chmod 755 /etc/rc.local
 ```
 重启
+
+## 设置别名
+```
+# 当前窗口有效 
+alias gm=/path/to/v8/tools/dev/gm.py
+```
