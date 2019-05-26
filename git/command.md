@@ -36,3 +36,14 @@ git revert commit_id
 git reset --hard commit_id
 ```
 不推荐，会删除 commit 历史记录。--hard 定位到 HEAD。
+## 全局代理
+```
+# HTTP 代理以 http:// 开头 ss 代理 socks5://127.0.0.1:1080
+git config --global http.proxy PROXY_URL
+git config --global http.proxy PROXY_URL
+```
+关闭代理
+```
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```

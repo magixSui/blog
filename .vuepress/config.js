@@ -35,6 +35,13 @@ module.exports = {
         ]
       },
       {
+        title: 'v8',
+        collapsable: true,
+        children: [
+          ['../chrome/', 'v8 引擎'],
+        ]
+      },
+      {
         title: 'typescript',
         collapsable: true,
         children: [
@@ -54,7 +61,7 @@ module.exports = {
         collapsable: true,
         children: [
           ['../git/create-git-repo.md', '创建 git 仓库'],
-          ['../git/reomove.md', 'git 操作 '],
+          ['../git/command.md', 'git 操作 '],
         ]
       },
       {

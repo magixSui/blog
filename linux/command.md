@@ -73,3 +73,28 @@ su - user
 :w !sudo tee % 
 选择 l
 ```
+
+## 添加环境变量
+有多种添加的方式，我当前使用的方式是 `vim ~/ .bashrc`
+```
+# 最后一行添加
+ exprot PATH=$PATH:YourPath
+```
+需要注意的是，如果已经存在环境变量，一定使用$PATH 然后以冒号添加，不然会导致全局环境变量实效。
+:::tip
+假如全局环境变量实效，可以使用命令设置临时环境变量,或者通过根路径访问命令，更改文件然后重启电脑。
+:::
+
+## 开机启动
+进入 `/etc/rc.local`
+```
+#!/bin/sh -e
+# 这是要执行的命令
+sudo sslocal -c /home/ss/ss.json -d start
+exit 0
+```
+增加权限
+```
+chmod 755 /etc/rc.local
+```
+重启
