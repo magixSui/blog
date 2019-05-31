@@ -12,5 +12,5 @@ features:
   details: 享受解决问题的乐趣，积累各项技能。
 - title: 个人磨砺
   details: 一直没有整理的个人习惯，创建此网站，也算是对自身的一个挑战。
-footer: MIT Licensed | Copyright © 2018-present Magix Sui 
+footer: MIT Licensed | Copyright © 2019-present Magix Sui 
 ---

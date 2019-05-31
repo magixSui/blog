@@ -15,13 +15,19 @@ git branch dev
 ## 查看分支
 
 ```
+// 本地
 git branch
+// 远程
+git branch -r
 ```
 
 ## 切换分支
 
 ```
+// 本地
 git checkout dev
+// 远程 实际上是新建一个本地分支，然后拉取远程分支到新建分支上
+git checkout -b namelocal origin/release
 ```
 推荐
 

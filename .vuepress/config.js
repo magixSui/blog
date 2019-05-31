@@ -6,8 +6,8 @@ module.exports = {
     nav: [
       { text: '博客', link: '/javascript/' },
       { text: 'Github', link: 'https://github.com/magicxin' }
-    ],sidebar: [
-//    ['/javascript/', '介绍'],
+    ],
+    sidebar: [
       {
         title: 'javascript',
         collapsable: true,
@@ -23,6 +23,24 @@ module.exports = {
           ['../javascript/es6-promise.md', 'es6-promise'],
           ['../javascript/api.md', 'api 进阶'],
           ['../javascript/transfer.md', '转换方法'],
+          ['../javascript/imp.md', 'js 通用方法'],
+        ]
+      },{
+        title: 'vue 源码学习',
+        collapsable: true,
+        children: [
+          ['../vue-source/', '介绍'],
+      //        ['../vue-source/config.md', '全局配置'],
+          ['../vue-source/init.md', '模板动态绑定'],
+          ['../vue-source/appendix.md', '附录'],
+          ['../vue-source/init0001.md', '事件拦截器绑定'],
+        ]
+      },
+      {
+        title: 'vue',
+        collapsable: true,
+        children: [
+          ['../vue/base.md', '基础'],
         ]
       },
       {
@@ -101,17 +119,6 @@ module.exports = {
           ['../linux/nvm.md', 'nvm 版本管理'],
         ]
       },
-      {
-        title: 'vue 源码学习',
-        collapsable: true,
-        children: [
-          ['../vue-source/', '介绍'],
-//        ['../vue-source/config.md', '全局配置'],
-          ['../vue-source/init.md', '模板动态绑定'],
-          ['../vue-source/appendix.md', '附录'],
-          ['../vue-source/init0001.md', '事件拦截器绑定'],
-        ]
-      },
 //    {
 //      title: 'element 源码学习',
 //      collapsable: true,
@@ -167,6 +174,7 @@ module.exports = {
           ['../utils/component.md', 'component 入门'],
           ['../utils/stencil.md', 'stencil 入门'],
           ['../utils/yarn.md', 'yarn 入门'],
+          ['../utils/vue-plugin.md', 'webpack vue 插件入门'],
         ]
       },
       {
