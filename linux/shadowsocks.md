@@ -4,6 +4,8 @@
 ```
 sudo apt-get install python-pip
 sudo pip install shadowsocks
+
+vim /usr/local/lib/pythonon2.7/dist-packages/shadowsocks/crypto/openssl.py
 ```
 :::warning
 我使用的版本是2.18.2，安装完成并不能运行，会抛出一个异常，需要<br>
@@ -51,6 +53,7 @@ sock5 127.0.0.1 1080
 ```
 应用设置。<br>
 进入 auto switch 
+- 添加规则
 - 按照规则列表匹配请求选择刚才配置好的情景模式
 - 规则列表选择 autoProxy
 - 地址栏 https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
@@ -60,6 +63,19 @@ sock5 127.0.0.1 1080
 
 ## 后台启动
 ```
-ssserver -c /etc/shadowsocks.json -d start
-ssserver -c /etc/shadowsocks.json -d stop
+sslocal -c /home/ss/shadowsocks.json -d start
+sslocal -c /home/ss/shadowsocks.json -d stop
 ```
+## 开机启动
+进入 `/etc/rc.local`
+```
+#!/bin/sh -e
+# 这是要执行的命令
+sudo sslocal -c /home/ss/ss.json -d start
+exit 0
+```
+增加权限
+```
+chmod 755 /etc/rc.local
+```
+重启
