@@ -50,6 +50,8 @@ module.exports = {
           ['../nodejs/', '简述'],
           ['../nodejs/schema-design.md', 'schema 设计'],
           ['../nodejs/design.md', ' 解决方案 '],
+          ['../nodejs/npm.md', '包管理工具'],
+          ['../nodejs/command.md', '命令行脚本'],
         ]
       },
       {
@@ -175,6 +177,9 @@ module.exports = {
           ['../utils/stencil.md', 'stencil 入门'],
           ['../utils/yarn.md', 'yarn 入门'],
           ['../utils/vue-plugin.md', 'webpack vue 插件入门'],
+          ['../utils/rollup.md', 'rollup 入门'],
+          ['../utils/framemarker.md', 'framemarker 入门'],
+          ['../utils/nrm.md', 'nrm 入门'],
         ]
       },
       {

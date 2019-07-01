@@ -53,3 +53,22 @@ git config --global http.proxy PROXY_URL
 git config --global --unset http.proxy
 git config --global --unset https.proxy
 ```
+
+## 合并到主干
+```
+git checkout master 
+git merge --squash  branch
+git commit 
+git push
+```
+
+## 查看配置
+```
+git config --list
+```
+
+## 
+```
+git config --global credential.helper wincred
+git credential-manager uninstall
+```

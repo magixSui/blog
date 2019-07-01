@@ -92,3 +92,12 @@ use: ['babel-loader',  "eslint-loader"]
         "sourceType": "module"
     },
 ```
+
+### vue 中 jsx 配置
+```
+npm install @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props
+// .babelrc
+{
+  "presets": ["@vue/babel-preset-jsx"]
+}
+```
