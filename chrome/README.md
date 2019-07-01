@@ -34,7 +34,7 @@ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 
 ### 配置环境变量
 ```
-vim ~/ .bashrc
+vim ~/.bashrc
 # 添加到最后，$PATH 代表添加到已有环境变量后，而非替换，这里要非常注意
 export PATH=$PATH:/path/to/depot_tools
 source .bashrc

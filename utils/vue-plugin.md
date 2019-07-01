@@ -100,4 +100,22 @@ npm install @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props
 {
   "presets": ["@vue/babel-preset-jsx"]
 }
+**可以使用推荐配置**
+```
+"extends": "eslint:recommended"
+```
+
+window is not defined
+
+```
+browser: true
+```
+
+### render 函数使用 jsx 语法
+```
+npm i babel-plugin-syntax-jsx babel-plugin-transform-vue-jsx babel-helper-vue-jsx-merge-props
+```
+配置 .babelrc
+```
+"plugins": ["transform-vue-jsx"]
 ```
