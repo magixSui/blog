@@ -23,3 +23,15 @@ yarn config get registry
 yarn config set registry https://registry.npm.taobao.org
 yarn config set registry https://registry.yarnpkg.com
 ```
+
+## npm 安装 github 私有项目
+```
+npm install https://github.com/front-frame/consolidate.js.git
+npm install git@github.com:front-frame/consolidate.js.git
+```
+package.json
+```json
+{
+    "consolidate": "git+https://github.com/front-frame/consolidate.js.git"
+}
+```

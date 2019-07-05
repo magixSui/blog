@@ -40,6 +40,8 @@ git revert commit_id
 ## 回滚
 ```
 git reset --hard commit_id
+// 回滚后删除已提交 commit
+git push origin HEAD --force
 ```
 不推荐，会删除 commit 历史记录。--hard 定位到 HEAD。
 ## 全局代理

@@ -180,6 +180,8 @@ module.exports = {
           ['../utils/rollup.md', 'rollup 入门'],
           ['../utils/framemarker.md', 'framemarker 入门'],
           ['../utils/nrm.md', 'nrm 入门'],
+          ['../utils/axios.md', 'axios 入门'],
+          ['../utils/wx.md', '小程序入门'],
         ]
       },
       {
