@@ -32,6 +32,56 @@ replacer(match,p1,p2,ofsset,string)
 是原字符串。
 ```
 
+## void
+### 代替 undefined
+undefined 并不是保留字。在某些老旧的浏览器中，undefined 可以被改写，另外在局部作用域下也可以被改写，另外可以节省几个字节。
+```javascript
+!function() {
+  var undefined = 8
+  var a = undefined
+  console.log(a) // 8
+}()
+```
+
+### iife （Immediately Invoked Function Expressions）
+void 是实现 iife 的方式之一
+```javascript
+(function(p){
+    // 函数体内容
+})(p);
+
+(function(p){
+    // 函数体内容
+}( p));
+
+!function(p){
+    // 函数体内容
+}(p)
+
++function( p){
+    // 函数体内容
+}(p)
+
+-function(p){
+    // 函数体内容
+}(p)
+
+~function(p){
+    // 函数体内容
+}(p)
+
+void function(p){
+    // 函数体内容
+}(p)
+```
+
+### 消除副作用
+当使用箭头函数时，可以返回 void 表达式，确保表达式 api 变更时不会影响到使用。
+```javascript
+// doSomething 更改为返回 true 时不会影响到 button.onclick
+button.onclick = () => void doSomething();
+```
+
 ## 转换方法
 
 ### toString() toLocalString() 与 valueOf()
