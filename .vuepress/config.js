@@ -13,14 +13,14 @@ module.exports = {
         collapsable: true,
         children: [
           ['../javascript/', '序'],
-          ['../javascript/preface.md', 'javascript 简述'],
-          ['../javascript/syntax.md', 'javascript 语法'],
-          ['../javascript/es6.md', 'es6 语法'],
-          ['../javascript/analysis.md', '内存泄漏与性能分析'],
-          ['../javascript/promise.md', '实现一个promise'],
-          ['../javascript/es6-promise.md', 'es6-promise'],
+          // ['../javascript/preface.md', 'javascript 简述'],
+          // ['../javascript/syntax.md', 'javascript 语法'],
+          // ['../javascript/es6.md', 'es6 语法'],
+          // ['../javascript/analysis.md', '内存泄漏与性能分析'],
+          // ['../javascript/promise.md', '实现一个promise'],
+          // ['../javascript/es6-promise.md', 'es6-promise'],
           ['../javascript/api.md', 'api 进阶'],
-          ['../javascript/imp.md', 'js 通用方法'],
+          // ['../javascript/imp.md', 'js 通用方法'],
         ]
       },{
         title: 'vue 源码学习',

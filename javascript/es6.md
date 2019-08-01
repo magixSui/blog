@@ -1,5 +1,12 @@
 # es6 
 没有去系统的整理 es6 的语法，在日常使用中遇到之后，就记录到这里。
+
+## iterable
+es 2015 中规定了可迭代协议和迭代器协议。可迭代协议允许 js 对象定义自身的迭代行为，前提是必须在对象属性或原型上实现
+`[Symbol.iterator]`,并返回一个迭代器对象。迭代器协议规定必须实现一个 next 方法并且返回一个对象，这个对象包含 done 和
+value 两个属性。
+内置可迭代对象：String, Array, TypedArray, Map and Set。
+
 ## Map
 Map 是一组键值对的结构。
 ```javascript

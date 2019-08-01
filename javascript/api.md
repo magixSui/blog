@@ -1,5 +1,41 @@
 # api 进阶
-在 api 的使用中，经常会忽略一些细节，此篇会记录那些我并没有以好的方式使用、没有完全理解的 api。
+抱着学习计算机科学中一门语言的态度，我开启了这一系列的记录。在普通的开发工作中可能并不会涉及到 javascript 每一个 api，但是我想做的
+是极致性能的工具、框架、对这门语言的精通，所以为了更好的基础，在此记录 javascript 在发展中的 api 细节。
+
+## Object
+通常使用两种方式创建对象，对象字面量表示和构造函数。
+```javascript
+let obj1 = {
+  a: 1
+}
+let obj2 = new Object()
+```
+对于使用构造函数创建对象，可以接收参数，不同的参数创建的对象也是有区别的。
+```javascript
+// 创建一个继承 Object.prototype 的空对象
+let obj1 = new Object // 不推荐
+let obj2 = new Object()
+let obj3 = new Object(null)
+let obj4 = new Object(undefined)
+// 非构造函数调用
+let obj5 = Object()
+// 对象字面量
+let obj6 = {}
+// 会创建包装类型
+let objNumber = new Object(1) // Number
+
+// 会创建引用类型
+let objObject = new Object({a: 1}) // Object
+let objArray = new Object([1,2,3]) // Object
+```
+:::tip
+在 javascript 函数中，构造函数也是一个普通函数，可以调用。如果构造函数中含有 this ，那么只有在使用构造函数的情况才会
+指向当前对象，否则指向全局对象。
+:::
+
+## Object.prototype
+几乎所有创建出来的 js 对象，都是 Object 实例。这些实例会继承 Object.prototype 上的属性和方法。但是 js 的机制是强大而
+又存在风险的。可以覆盖或遮蔽原型链上的属性或方法，也可以创建不具有原型链的对象。
 
 ## Object.create
 Object.create 创建一个新的对象，他使用一个已经存在的对象作为原型。
@@ -81,6 +117,11 @@ void function(p){
 // doSomething 更改为返回 true 时不会影响到 button.onclick
 button.onclick = () => void doSomething();
 ```
+
+## RegExp
+### 创建
+- var re = /ab+c/; // 当模式确定时，使用这种方式可以提升性能
+- var re = new RegExp('ab+c'); // 当传入动态模式需要使用这种方式
 
 ## 转换方法
 
