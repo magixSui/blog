@@ -36,6 +36,125 @@ let objArray = new Object([1,2,3]) // Object
 ## Object.prototype
 几乎所有创建出来的 js 对象，都是 Object 实例。这些实例会继承 Object.prototype 上的属性和方法。但是 js 的机制是强大而
 又存在风险的。可以覆盖或遮蔽原型链上的属性或方法，也可以创建不具有原型链的对象。
+- Object.create(null) # 可以创建一个没有原型的对象
+- 操作 Function.prototype
+- Object.setPrototypeOf
+
+## Object.assign
+这是我使用比较多的方法了,他可以将一个或多个源对象复制到目标目标对象并且返回目标对象。
+```javascript
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+const returnedTarget = Object.assign(target, source);
+console.log(returnedTarget); // {a: 1, b: 4, c: 5}
+console.log(target); // {a: 1, b: 4, c: 5}
+console.log(returnedTarget === target) // true
+// 对于需要拷贝属性设置，如 wtritable 需使用其他方法
+```
+对于继承属性和不可枚举属性是不能拷贝的
+```javascript
+const obj = Object.create({foo: 1}, { // foo 是个继承属性。
+    bar: {
+        value: 2  // bar 是个不可枚举属性。
+    },
+    baz: {
+        value: 3,
+        enumerable: true  // baz 是个自身可枚举属性。
+    }
+});
+
+const copy = Object.assign({}, obj);
+console.log(copy); // { baz: 3 }
+```
+:::tip
+只有 String 包装对象可能具有可枚举属性
+```javascript
+const v1 = "abc";
+const v2 = true;
+const v3 = 10;
+const v4 = Symbol("foo")
+
+const obj = Object.assign({}, v1, null, v2, undefined, v3, v4); 
+// 原始类型会被包装，null 和 undefined 会被忽略。
+// 注意，只有字符串的包装对象才可能有自身可枚举属性。
+console.log(obj); // { "0": "a", "1": "b", "2": "c" }
+```
+遇到异常后续拷贝失败
+```javascript
+const target = Object.defineProperty({}, "foo", {
+    value: 1,
+    writable: false
+}); // target 的 foo 属性是个只读属性。
+
+Object.assign(target, {bar: 2}, {foo2: 3, foo: 3, foo3: 3}, {baz: 4});
+// TypeError: "foo" is read-only
+// 注意这个异常是在拷贝第二个源对象的第二个属性时发生的。
+
+console.log(target.bar);  // 2，说明第一个源对象拷贝成功了。
+console.log(target.foo2); // 3，说明第二个源对象的第一个属性也拷贝成功了。
+console.log(target.foo);  // 1，只读属性不能被覆盖，所以第二个源对象的第二个属性拷贝失败了。
+console.log(target.foo3); // undefined，异常之后 assign 方法就退出了，第三个属性是不会被拷贝到的。
+console.log(target.baz);  // undefined，第三个源对象更是不会被拷贝到的。
+```
+:::
+完整的拷贝需要配合 Object.getOwnpropertyDescriptor 和 Object.defineProperties 将属性描述符整个拷贝。
+```javascript
+// TODO 拷贝可枚举的 symbol
+const obj = {
+      foo: 1,
+      get bar() {
+        return 2;
+      }
+    };
+    
+    // 下面这个函数会拷贝所有自有属性的属性描述符
+    function completeAssign(target, ...sources) {
+      sources.forEach(item => {
+        let descriptors = Object.keys(item).reduce((descriptors, key) => {
+          descriptors[key] = Object.getOwnPropertyDescriptor(item, key)
+          return descriptors;
+        }, {})
+        console.log(descriptors)
+        Object.defineProperties(target, descriptors)
+      })
+      return target
+    }
+
+    let copy = completeAssign({}, obj);
+    console.log(copy);
+```
+polyfill 不支持 Symbol
+```javascript
+if (typeof Object.assign != 'function') {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, "assign", {
+    value: function assign(target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target == null) { // TypeError if undefined or null
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      let to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource != null) { // Skip over if undefined or null
+          for (let nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true
+  });
+}
+```
 
 ## Object.create
 Object.create 创建一个新的对象，他使用一个已经存在的对象作为原型。
@@ -54,6 +173,68 @@ propertiesObject | properties | false |
 
 propertiesObject 的参数对应 Object。defineProperties 的第二个参数，代表创建对象的可枚举属性，而不是原型属性。
 
+可以使用 Object.create(null) 创建一个不含有原型的空对象。
+
+## Object.defineProperty
+defineProperty 是 es5 加入的一个对象方法，此方法可以在一个对象上新增一个属性或者修改现有属性，并返回这个对象。
+### 属性描述符
+defineProperty 接收三个参数，obj, prop, descriptor。obj 是想要修改的对象，prop 是想要增加或修改的属性，descriptor
+是**属性描述符**。
+属性描述符有两种，数据描述符和访问器描述符。在《javascript高级程序设计第三版》中，把他叫做属性类型。
+### 数据描述符
+在 js 高程中说 ~~这些特性是为了实现 javascript 引擎用的，因此不能通过 javascript 直接访问。~~ 但是其实可以通过 Object.getOwnProperties
+访问这些属性。
+- [[Enumerable]] 是否可以for...in...枚举
+- [[Configurable]] 是否可删除（实际作用效果我觉得大于这个定义）
+- [[Writable]] 是否可修改 Value
+- [[Value]] 属性的值
+```javascript
+var person = {
+  name:'Richard'
+}
+// 默认属性描述符为:Enumerable:true,Configurable:true,Writable:true,Value:'Richard'
+```
+如果使用 Object.defineProperty 创建一个属性，那么所有特性默认是 false 。如果 configurable 的值是 false ，将无法再通过 Object.defineProperty
+设置属性。
+```javascript
+var person = {
+  name:'Richard'
+}
+Object.defineProperty(person,'fullname',{
+  configurable:false
+})
+// 无效
+Object.defineProperty(person,'fullname',{
+  configurable:true,
+  writable:false
+})
+```
+想修改默认属性描述符，必须通过 ` Object.defineProperty `。
+:::warning
+IE8 实现了definePropery 但是只存在 DOM 中，并且只能使用访问器描述符，所以避免在 IE8 下使用。 
+:::
+这些特性不一定是自身属性，也有可能来自继承，所以如果想设置默认值，需要冻结 Object.prototype ,或者通过 Object.create(null) 将 __proto__ 属性指向 null 。
+### 访问器描述符
+- [[Configurable]]
+- [[Enumerable]]
+- [[Get]] 默认值 undefined
+- [[Set]] 默认值 undefined
+
+```javascript
+var person = {
+  _name: 'Richard'
+}
+Object.defineProperty(person,'name',{
+  get: function() {
+    return this._name
+  },
+  set: function(newV) {
+    this._name = newV
+  }
+})
+person.name = 'Kame'
+```
+
 ## String.prototype.replace
 :::tip
 str.replace(regexp|substr, newSubStr|function)
@@ -67,7 +248,6 @@ replacer(match,p1,p2,ofsset,string)
 // 其中 match 是匹配的字符串，p1 是第一个括号内的匹配，p2 ... offset 是子字符串在原字符串中的偏移量（也就是原来的 index 值），string
 是原字符串。
 ```
-
 ## void
 ### 代替 undefined
 undefined 并不是保留字。在某些老旧的浏览器中，undefined 可以被改写，另外在局部作用域下也可以被改写，另外可以节省几个字节。
@@ -237,62 +417,5 @@ forEach 遍历的范围在第一次调用 callback 前就会确定。调用 forE
 
 ### Document​.query​SelectorAll
 
-## defineProperty
-defineProperty 是 es5 加入的一个对象方法，此方法可以在一个对象上新增一个属性或者修改现有属性，并返回这个对象。
-### 属性描述符
-defineProperty 接收三个参数，obj, prop, descriptor。obj 是想要修改的对象，prop 是想要增加或修改的属性，descriptor
-是**属性描述符**。
-属性描述符有两种，数据描述符和访问器描述符。在《javascript高级程序设计第三版》中，把他叫做属性类型。
-### 数据描述符
-这些特性是为了实现 javascript 引擎用的，因此不能通过 javascript 直接访问。
-- [[Enumerable]] 是否可以for...in...枚举
-- [[Configurable]] 是否可删除（实际作用效果我觉得大于这个定义）
-- [[Writable]] 是否可修改 Value
-- [[Value]] 属性的值
-```javascript
-var person = {
-  name:'Richard'
-}
-// 默认属性描述符为:Enumerable:true,Configurable:true,Writable:true,Value:'Richard'
-```
-如果使用 defineProperty 创建一个属性，那么所有特性默认是 false ，如果修改一个属性，没有写入的特性默认 true ,如果先设置了
-Configurable 为 false ，那么之后所有的设置都会失效。
-```javascript
-var person = {
-  name:'Richard'
-}
-Object.defineProperty(person,'fullname',{
-  Configurable:false
-})
-// 无效
-Object.defineProperty(person,'fullname',{
-  Configurable:true,
-  Writable:false
-})
-```
-想修改默认属性描述符，必须通过 ` Object.defineProperty `。
-:::warning
-IE8 实现了definePropery 但是只存在 DOM 中，并且只能使用访问器描述符，所以避免在 IE8 下使用。 
-:::
-这些特性不一定是自身属性，也有可能来自继承，所以如果想设置默认值，需要冻结 Object.prototype ,或者通过 Object.create(null) 将 __proto__ 属性指向 null 。
-### 访问器描述符
-- [[Configurable]]
-- [[Enumerable]]
-- [[Get]] 默认值 undefined
-- [[Set]] 默认值 undefined
 
-```javascript
-var person = {
-  _name: 'Richard'
-}
-Object.defineProperty(person,'name',{
-  get: function() {
-    return this._name
-  },
-  set: function(newV) {
-    this._name = newV
-  }
-})
-person.name = 'Kame'
-```
 

@@ -74,3 +74,12 @@ git config --list
 git config --global credential.helper wincred
 git credential-manager uninstall
 ```
+
+## 上传已存在项目
+```
+git init
+git add .
+git commit -m "first commit"
+git remote add origin https://github.com/xx/xx.git（项目地址）
+git push -u origin master
+```
