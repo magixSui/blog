@@ -112,6 +112,7 @@ module.exports = {
         collapsable: true,
         children: [
           ['../linux/command.md', 'linux 操作'],
+          ['../linux/server.md', '云服务器'],
           ['../linux/setup.md', 'linux 系统'],
           ['../linux/shadowsocks.md', 'linux ss'],
           ['../linux/n-module.md', 'n 版本管理'],
@@ -179,6 +180,13 @@ module.exports = {
           ['../utils/nrm.md', 'nrm 入门'],
           ['../utils/axios.md', 'axios 入门'],
           ['../utils/wx.md', '小程序入门'],
+        ]
+      },
+      {
+        title: 'webpack 配置',
+        collapsable: true,
+        children: [
+          ['../webpack/config.md', '配置'],
         ]
       },
       {

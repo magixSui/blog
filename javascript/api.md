@@ -234,6 +234,64 @@ Object.defineProperty(person,'name',{
 })
 person.name = 'Kame'
 ```
+**属性描述符不一定是自身属性，可以通过继承得到，因此在某些情况需要通过 Object.freeze 确保默认的属性描述符,或者更好的做法是创建一个没有原型
+的对象，确保属性描述符的确定性。**
+```javascript
+// 通过 Object.create(null) 创建具有默认属性描述符的属性，如果使用对象字面量 var obj = {} 
+// 通过更改原型可以改变默认的属性描述符   Object.prototype.configurable = true
+var obj = Object.create(null)
+var descriptor = Object.create(null)
+Object.defineProperty(obj, 'key', descriptor) // configurable: false enumerable: false value: undefined writable: false
+
+// 显示创建
+var obj = Object.create(null)
+Object.defineProperty(obj, 'key', {
+  configurable: false,
+  enumerable: false,
+  value: undefined,
+  writable: false
+})
+
+// 冻结原型
+var obj = {}
+;(Object.freeze||Object)(Object.prototype)
+// Error in mounted hook: "TypeError: Cannot add property configurable, object is not extensible"
+Object.prototype.configurable = true
+Object.defineProperty(obj, 'key', {})
+console.log(Object.getOwnPropertyDescriptors(obj))
+```
+重复使用同一个对象，可以减少对象创建
+```javascript
+// 循环使用同一对象
+function withValue(value) {
+  var d = withValue.d || (
+    withValue.d = {
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: null
+    }
+  );
+  d.value = value;
+  return d;
+}
+Object.defineProperty(obj, "key", withValue("static"));
+```
+
+## Object.entries
+Object.entries接收一个可迭代对象，返回给定对象可枚举属性的键值对数组。
+```javascript
+Object.entries([1,2])
+// [Array(2), Array(2)]
+// 0: (2) ["0", 1]
+// 1: (2) ["1", 2]
+```
+### Object 转 Map
+```javascript
+var obj = { foo: "bar", baz: 42 }; 
+var map = new Map(Object.entries(obj));
+console.log(map); // Map { foo: "bar", baz: 42 }
+```
 
 ## String.prototype.replace
 :::tip
