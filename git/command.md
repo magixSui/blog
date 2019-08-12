@@ -6,6 +6,11 @@
 git push --mirror + url
 ```
 
+## 创建远端分支
+```
+git push origin release/3.0
+```
+
 ## 创建分支
 
 ```
