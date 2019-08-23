@@ -98,6 +98,7 @@ module.exports = {
         children: [
 //        ['../base-on-requirement/', '介绍'],
           ['../base-on-requirement/autodeploy.md', '基于git自动部署'],
+          ['../base-on-requirement/autodeploy2.md', '基于travis自动部署'],
           ['../base-on-requirement/transfer.md', '进制转换'],
           ['../base-on-requirement/SEO.md', '百度搜索优化'],
           ['../base-on-requirement/speech.md', '语音输入'],
