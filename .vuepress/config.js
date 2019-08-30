@@ -106,6 +106,7 @@ module.exports = {
           ['../base-on-requirement/https.md', 'https 腾讯云'],
           ['../base-on-requirement/autodeploy-github.md', 'github自动部署'],
           ['../base-on-requirement/pm2.md', 'pm2 管理 node 项目'],
+          ['../base-on-requirement/bug.md', '一些 bug'],
         ]
       },
       {
