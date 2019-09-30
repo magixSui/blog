@@ -182,6 +182,7 @@ module.exports = {
           ['../utils/nrm.md', 'nrm 入门'],
           ['../utils/axios.md', 'axios 入门'],
           ['../utils/wx.md', '小程序入门'],
+          ['../utils/mongodb.md.md', 'mongodb 入门'],
         ]
       },
       {

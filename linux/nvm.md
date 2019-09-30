@@ -52,3 +52,15 @@ apt-get 更新以得到最新的包，否则可能会导致安装的并不是自
 ```
 apt-get update
 ```
+
+## 服务端 root 
+在配置服务端时，发现安装的 nvm 只能在 user 下使用，不能使用 root 权限开启 80 端口。这是因为 root 下没有对应的 nvm 和 npm 包，root 用户无法识别这个命令。
+https://stackoverflow.com/questions/21215059/cant-use-nvm-from-root-or-sudo
+只需要在用户命令行执行：
+```
+n=$(which node)
+n=${n%/bin/node}
+chmod -R 755 $n/bin/*
+sudo cp -r $n/{bin,lib,share} /usr/local
+```
+就可以在 root 下拷贝一份。

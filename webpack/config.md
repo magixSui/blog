@@ -100,7 +100,7 @@ rules: [
 到目前位置需要手动在 html 中配置一些生成信息。`html-webpack-plugin` 可以自动读取webpack中的依赖生成 index.html。
 ```javascript
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+// 定义模板会从模板目录 src/index 读取，否则会自动生成
 new HtmlWebpackPlugin({
             template: 'src/index.html'
           })
@@ -110,6 +110,85 @@ new HtmlWebpackPlugin({
 配置 template 使模板从指定目录读取。
 :::
 
+### 清理 dist 目录
+由于每次生成的文件带有 hash 值，会导致文件目录越来越大，clean-webpack-plugin 可以在每次生成前删除目录。
+```
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+plugins: [
+        new CleanWebpackPlugin()
+    ]
+```
+
+### 开启 sourceMap
+由于代码被处理和压缩，debug 就成了一个问题。sourceMap 可以解决 debug 的问题。对于 development 环境，可以设置：
+```
+devtool: 'inline-source-map'
+```
+对于生产环境可以设置
+```
+devtool: 'source-map'
+```
+
+### 自动编译 热启动
+有三种方式可以不重复 build 而实现修改后的内容实时变更。
+- watch mode
+- webpack-dev-server
+- webpack-dev-middleware
+
+### hrm 热更新
+hrm 需要和 loader 配合使用
+```
+const webpack = require('webpack');
+plugins: [
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin()
+    ]
+```
+
+### tree-shaking（删除未引用代码）
+package.json 下设置 sideEffects: false, 并且配置压缩插件。mode 是 production 会自动开启。
+TODO
+
+### 逻辑分离 不重复原则
+分离 webpack.config.json，根据逻辑分离原则，创建两个新的 config 文件。`webpack.dev.js` 和 `webpack.prod.js`,根据不重复原则
+创建第三个文件 `webpack.common.js` 利用 `webpack-merge` 插件合并配置。
+
+### 代码压缩
+`mode: 'production'` 默认情况会开启压缩。有三种方式压缩代码：
+- UglifyJSPlugin
+- BabelMinifyWebpackPlugin
+- ClosureCompilerPlugin
+:::tip
+使用需要查看是否具有 tree-shaking 的能力
+:::
+
+### 使用 cli
+可以在控制台输入来开启一些配置，不过更推荐写入配置文件。
+```
+--optimize-minimize # 开启 UglifyJSPlugin
+--define process.env.NODE_ENV = "'production'" # 设置 mode production
+webpack -p 
+```
+### code-split 代码分割
+有三种代码分割的方式
+- entry
+- CommonsChunckPlugin
+- 动态导入
+TODO
+
+### 配置代理
+对于前后分离的项目，调试接口时一般需要配置 proxy 代理。
+```
+devServer: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3000/community_manage/',
+                pathRewrite: {'^/api' : ''},
+                changeOrigin: true
+            }
+        },
+    }
+```
 
 ## babel-polyfill
 babel 只会转义一些 es6 语法相关的内容，对于很多特性是缺失的。因此在老旧的浏览器比如 ie11 ，babel-polyfill 就是必要的了。
