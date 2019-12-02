@@ -23,6 +23,14 @@ module.exports = {
           // ['../javascript/imp.md', 'js 通用方法'],
         ]
       },{
+        title: 'vue 3.0',
+        collapsable: true,
+        children: [
+          ['../vueV3/', '介绍'],
+          ['../vueV3/init.md', '得到源码后'],
+          ['../vueV3/rollup.md', '打包器'],
+        ]
+      },{
         title: 'vue 源码学习',
         collapsable: true,
         children: [
