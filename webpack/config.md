@@ -75,6 +75,28 @@ rules: [
     }
 ]
 ```
+### babel 加载 js
+由于代码中会使用除 es5 之外的语法，想要使用新的 api 能力需要引入babel。
+```
+npm install -D babel-loader @babel/core @babel/preset-env
+```
+webpack 中的配置
+```json
+module: {
+  rules: [
+    {
+      test: /\.m?js$/,
+      exclude: /(node_modules|bower_components)/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    }
+  ]
+}
+```
 
 ### 文件加载
 可以使用 file-loader 加载图片、字体等文件。需要注意的是，css 中 background 等方式设置的路径，直接打包后并不能正确加载。这是因为
@@ -216,4 +238,39 @@ entry: ["babel-polyfill", "./src/main.js"]
     loader: 'babel-loader',
     include: [resolve('src'), resolve('/node_modules/element-ui/src'),resolve('/node_modules/element-ui/packages'), resolve('node_modules/webpack-dev-server/client')]
 },
+```
+
+## 优化
+### 优化 webpack 在命令行中的显示日志
+- webpack 内置 stat 配置
+- friendly-errors-webpack-plugin 插件
+```javascript
+'errors-only'
+
+none
+Only output when errors happen
+'errors-warnings'
+
+none
+Only output errors and warnings happen
+'minimal'
+
+none
+Only output when errors or new compilation happen
+'none'
+
+false
+Output nothing
+'normal'
+
+true
+Standard output
+'verbose'
+
+none
+Output everything
+```
+安装插件
+```
+npm install friendly-errors-webpack-plugin -D
 ```
