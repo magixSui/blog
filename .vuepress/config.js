@@ -22,7 +22,15 @@ module.exports = {
           ['../javascript/api.md', 'api 进阶'],
           // ['../javascript/imp.md', 'js 通用方法'],
         ]
-      },{
+      }, {
+        title: 'html',
+        collapsable: true,
+        children: [
+          ['../html/chapter1.md', 'html'],
+          ['../html/tags.md', '标签'],
+          ['../html/debug.md', 'debug'],
+        ]
+      }, {
         title: 'vue 3.0',
         collapsable: true,
         children: [
@@ -30,7 +38,7 @@ module.exports = {
           ['../vueV3/init.md', '得到源码后'],
           ['../vueV3/rollup.md', '打包器'],
         ]
-      },{
+      }, {
         title: 'vue 源码学习',
         collapsable: true,
         children: [
@@ -53,10 +61,18 @@ module.exports = {
         collapsable: true,
         children: [
           ['../nodejs/', '简述'],
+          ['../nodejs/base.md', '基础知识'],
           ['../nodejs/schema-design.md', 'schema 设计'],
           ['../nodejs/design.md', ' 解决方案 '],
           ['../nodejs/npm.md', '包管理工具'],
           ['../nodejs/command.md', '命令行脚本'],
+        ]
+      },
+      {
+        title: 'java',
+        collapsable: true,
+        children: [
+          ['../java/basic1.md', 'Spring Boot']
         ]
       },
       {
@@ -71,6 +87,15 @@ module.exports = {
         collapsable: true,
         children: [
           ['../typescript/resolve.md', '解决方案'],
+        ]
+      },
+      {
+        title: 'css',
+        collapsable: true,
+        children: [
+          ['../css/bug', 'css 兼容'],
+          ['../css/responsive', '响应式'],
+          ['../css/transition', '动画']
         ]
       },
       {
@@ -198,6 +223,14 @@ module.exports = {
         collapsable: true,
         children: [
           ['../webpack/config.md', '配置'],
+          ['../webpack/dartsass.md', 'node-sass 下载失败'],
+          ['../webpack/multipages.md', '多页应用配置']
+        ]
+      }, {
+        title: '密码学',
+        collapsable: true,
+        children: [
+          ['../crypto/basic.md', '密码学基础']
         ]
       },
       {

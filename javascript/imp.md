@@ -34,3 +34,9 @@ const camelize = cached((str) => {
     return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
 })
 ```
+
+## replace
+```javascript
+// 替换全文变量
+replace(new RegExp(this.searchValue, 'g'), '');
+```  
