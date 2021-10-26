@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-07-28 10:43:40
+ * @LastEditTime: 2021-09-16 09:14:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \qz-admind:\projects\blog\git\command.md
+-->
 # git 命令
 
 ## 代码迁移
@@ -8,7 +16,7 @@ git push --mirror + url
 
 ## 创建远端分支
 ```
-git push origin release/3.0
+git push --set-upstream origin dev
 ```
 
 ## 创建分支
@@ -69,6 +77,12 @@ git commit
 git push
 ```
 
+## 取消合并
+当我们 merge 后发现冲突可以取消合并
+```
+git merge --abort
+```
+
 ## 查看配置
 ```
 git config --list
@@ -87,4 +101,15 @@ git add .
 git commit -m "first commit"
 git remote add origin https://github.com/xx/xx.git（项目地址）
 git push -u origin master
+```
+## 打 tag
+```
+git tag -a v1.1.1 -m "tag"
+git push origin v1.1.1
+```
+
+## 删除 tag
+```
+git tag -d v1.3.1
+git push origin :refs/tags/v1.3.1
 ```

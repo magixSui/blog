@@ -174,6 +174,7 @@ module.exports = {
         collapsable: true,
         children: [
           ['../front-design/front-design', '前端架构设计'],
+          ['../front-design/frontend-engineering', '前端工程化'],
         ]
       },
       {
